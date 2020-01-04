@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.sso.mapper.ParkMapper">
+	
+	<resultMap id="BaseResultMap" type="cn.antido.admin.pojo.Park">
+		<id column="id" property="id"/>  
+        <result column="name" property="name"/>  
+        <result column="position_desc" property="position_desc"/>  
+        <result column="park_type" property="park_type"/>
+		<result column="free_time" property="free_time"/>
+		<result column="state" property="state"/>
+		<result column="east_longitude" property="east_longitude"/>
+		<result column="north_latitude" property="north_latitude"/>
+		<result column="price" property="price"/>
+		<result column="created" property="created"/>		
+		<result column="updated" property="updated"/>
+		<result column="design_count" property="design_count"/>
+		<result column="working_count" property="working_count"/>
+		<result column="using_count" property="using_count"/>
+		<result column="district_id" property="district_id"/>
+		<result column="city_id" property="city_id"/>
+		<result column="province_id" property="province_id"/>
+		<result column="service_ip" property="service_ip"/>
+		<result column="direction" property="direction"/>
+		<result column="model_row" property="model_row"/>
+		<result column="model_col" property="model_col"/>
+		<!-- 对于关联的parkAdmin对象只封装id属性,在service层做其他可能要做的处理 -->
+		<association property="parkAdmin" javaType="cn.antido.admin.pojo.ParkAdmin">  
+           <id column="park_admin_id" property="id"/>
+           <result column="park_admin_name" property="name"/>
+        </association>
+        
+        <association property="street" javaType="cn.antido.admin.pojo.Street">  
+           <id column="street_id" property="id"/>
+        </association>
+        
+        <association property="node" javaType="cn.antido.admin.pojo.Node">  
+           <id column="node_id" property="id"/>
+        </association>
+	</resultMap>
+	
+	<sql id="tableName" > 
+		 tb_park 
+	</sql>
+	
+	<sql id="baseColumn" > 
+		id, name, position_desc, park_type, free_time, state, east_longitude, north_latitude, price, created, updated, park_admin_id, park_admin_name, design_count, working_count, using_count, street_id, district_id, city_id, province_id, node_id, service_ip, direction, model_row, model_col
+	</sql>
+	
+	<!-- 根据主键查询 -->
+	<select id="selectByPrimaryKey" parameterType="Long" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where id = #{id}
+	</select>
+	
+	<select id="selectByStreetId" parameterType="Integer" resultMap="BaseResultMap">
+		select id,name from  
+			<include refid="tableName" />
+		 where street_id = #{id} 
+	</select>
+	
+	<!-- 街道id查所有 -->
+	<select id="selectAllByStreetId" parameterType="Integer" resultMap="BaseResultMap">
+		select 
+ 	  		<include refid="baseColumn" />
+ 	  	from
+ 	  		<include refid="tableName" />
+ 	  	where street_id = #{regionId}
+	</select>
+	
+	<!-- 区县id查所有 -->
+	<select id="selectAllByDistrictId" parameterType="Integer" resultMap="BaseResultMap">
+		select 
+ 	  		<include refid="baseColumn" />
+ 	  	from
+ 	  		<include refid="tableName" />
+ 	  	where district_id = #{regionId}
+	</select>
+	
+	<!-- 市id查所有 -->
+	<select id="selectAllByCityId" parameterType="Integer" resultMap="BaseResultMap">
+		select 
+ 	  		<include refid="baseColumn" />
+ 	  	from
+ 	  		<include refid="tableName" />
+ 	  	where city_id = #{regionId}
+	</select>
+	
+	<!-- 省id查所有 -->
+	<select id="selectAllByProvinceId" parameterType="Integer" resultMap="BaseResultMap">
+		select 
+ 	  		<include refid="baseColumn" />
+ 	  	from
+ 	  		<include refid="tableName" />
+ 	  	where province_id = #{regionId}
+	</select>
+	
+	<select id="selectAdminByStreetId" parameterType="Integer" resultType="Integer" >
+		select park_admin_id 
+		from 
+			<include refid="tableName" />
+		where street_id = #{streetId} GROUP BY park_admin_id		
+	</select>
+	
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.admin.mapper.NodeAddressMapper">
+	
+	<resultMap id="BaseResultMap" type="cn.antido.admin.pojo.NodeAddress">
+		<id column="node_id" property="node_id"/>  
+        <result column="address" property="address"/>
+        <result column="port" property="port"/>
+        <result column="state" property="state"/>
+        <result column="key" property="key"/>
+	</resultMap>
+	
+	<sql id="tableName" > 
+		 tb_node_address 
+	</sql>
+	
+	<sql id="baseColumn" > 
+		node_id, address, port ,state, conn_key
+	</sql>
+	
+	<insert id="insert" parameterType="cn.antido.admin.pojo.NodeAddress">
+		insert into 
+		<include refid="tableName"/>
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+	      	<if test="node_id != null" >node_id,</if>
+	       	<if test="address != null" >address,</if> 	
+	       	<if test="port != null" >port,</if>
+     	 	<if test="state != null" >state,</if>
+     	 	<if test="conn_key != null" >conn_key,</if>
+     	 	<if test="created != null" >created,</if>
+     	 	<if test="updated != null" >updated,</if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="node_id != null" >#{node_id},</if>
+	       	<if test="address != null" >#{address},</if> 	
+	       	<if test="port != null" >#{port},</if> 
+     	 	<if test="state != null" >#{state},</if>
+     	 	<if test="conn_key != null" >#{conn_key},</if>
+     	 	<if test="created != null" >#{created},</if>
+     	 	<if test="updated != null" >#{updated},</if>
+		</trim>
+	</insert>
+	
+	<select id="selectByNodeAddress" parameterType="cn.antido.admin.pojo.NodeAddress" resultMap="BaseResultMap">
+		select  
+			<include refid="baseColumn"/>
+		from 
+			<include refid="tableName"/>
+		where node_id = #{node_id}
+	</select>
+	
+	<select id="selectById" parameterType="String" resultMap="BaseResultMap">
+		select  
+			<include refid="baseColumn"/>
+		from
+			<include refid="tableName"/>
+		where node_id = #{id}
+	</select>
+	
+	<select id="selectByAddress" parameterType="String" resultMap="BaseResultMap">
+		select  
+			<include refid="baseColumn"/>
+		from
+			<include refid="tableName"/>
+		where address = #{address}
+	</select>
+	
+	<update id="updateState" parameterType="cn.antido.admin.pojo.NodeAddress">
+		update
+		<include refid="tableName"/>
+		<set>
+			<if test="address != null">address = #{address},</if>
+			<if test="port != null">port = #{port},</if>
+			<if test="state != null">state = #{state},</if>
+			<if test="conn_key != null">conn_key = #{conn_key},</if>
+			<if test="created != null">created = #{created},</if>
+		</set>
+		where node_id = #{node_id}
+	</update>
+	
+	
+</mapper>

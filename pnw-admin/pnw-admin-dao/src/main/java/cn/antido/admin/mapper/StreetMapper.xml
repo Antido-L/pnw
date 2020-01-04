@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.admin.mapper.StreetMapper">
+	<resultMap id="BaseResultMap" type="cn.antido.admin.pojo.Street">
+		<id column="id" property="id"/>  
+        <result column="name" property="name"/> 
+         
+        <association property="district" javaType="cn.antido.admin.pojo.District">
+    		<id column="district_id" property="id"/>
+    	</association> 
+    	
+    	<association property="parkAdmin" javaType="cn.antido.admin.pojo.ParkAdmin">
+    		<id column="park_admin_id" property="id"/>
+    	</association> 
+	</resultMap>
+	
+	<sql id="tableName" > 
+		 tb_street 
+	</sql>
+	
+	<sql id="baseColumn" > 
+		id, name, district_id, park_admin_id
+	</sql>
+	
+	<!-- 根据主键查询 -->
+	<select id="selectByPrimaryKey" parameterType="Integer" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where id = #{id}
+	</select>
+	
+	<!-- 根据行政区 -->
+	<select id="selectByDistrict" parameterType="cn.antido.admin.pojo.District" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where district_id = #{id}
+	</select>
+	
+</mapper>

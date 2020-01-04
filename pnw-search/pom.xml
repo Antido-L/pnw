@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>cn.antido</groupId>
+    <artifactId>pnw-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>pnw-search</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+  	<module>pnw-search-service</module>
+  	<module>pnw-search-interface</module>
+  	<module>pnw-search-dao</module>
+  </modules>
+  
+  
+  <!-- 依赖common -->
+  <dependencies>
+		<dependency>
+			<groupId>cn.antido</groupId>
+			<artifactId>pnw-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+  
+ 
+	<build>
+		<plugins>
+			<!-- 配置tomcat插件 -->
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<configuration>
+					<path>/</path>
+					<port>8082</port>
+				</configuration>
+			</plugin>
+			<!-- 跳过单元测试 -->
+			<plugin>  
+		        <groupId>org.apache.maven.plugins</groupId>  
+		        <artifactId>maven-surefire-plugin</artifactId>  
+		        <configuration>  
+		          <skipTests>true</skipTests>  
+		        </configuration>  
+	        </plugin>
+		</plugins>
+	</build>
+  
+</project>

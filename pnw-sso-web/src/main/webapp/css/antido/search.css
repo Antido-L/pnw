@@ -1,0 +1,10 @@
+@media (min-width: 768px) {
+ 	/* TMD属性选择器为啥就不好使,日了狗 */
+	#antido-search-form {
+		width: 350px;
+	}
+}
+
+.ui-autocomplete {
+	z-index: 2000;
+}

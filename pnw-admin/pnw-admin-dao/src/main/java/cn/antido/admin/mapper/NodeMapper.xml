@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.admin.mapper.NodeMapper">
+	
+	<resultMap id="BaseResultMap" type="cn.antido.admin.pojo.Node">
+		<id column="id" property="id"/>  
+        <result column="is_online" property="is_online"/>
+        <result column="is_lock" property="is_lock"/>
+        <result column="is_close" property="is_close"/>
+        <result column="power" property="power"/>
+        <result column="created" property="created"/>
+        <result column="updated" property="updated"/>
+        <result column="node_desc" property="node_desc"/>
+        <result column="parnet_id" property="parnet_id"/>
+        <result column="space_id" property="space_id"/>
+        
+	</resultMap>
+	
+	<!-- 过滤查询字段 -->
+	<sql id="whereClause">
+		<where>
+			<!-- 新增AND条件 -->
+			<if test="andCondition != null">
+				<foreach collection="andCondition" item="criteria">
+					<choose>
+						<when test="criteria.noValue">
+							and ${criteria.action}
+						</when>
+						<when test="criteria.singleValue">
+							and ${criteria.action} #{criteria.value}
+						</when>
+						<when test="criteria.betweenValue">
+							and ${criteria.action} #{criteria.value} and
+							#{criteria.anotherValue}
+						</when>
+						<when test="criteria.arrValue">
+							and ${criteria.action}
+							<foreach collection="criteria.values" item="arrayItem" open="(" close=")" separator=",">
+								#{arrayItem}
+							</foreach>
+						</when>
+					</choose>
+				</foreach>
+			</if>
+			<!-- 新增OR条件 -->
+			<if test="orCondition != null">
+				<foreach collection="orCondition" item="criteria">
+					<choose>
+						<when test="criteria.noValue">
+							or ${criteria.action}
+						</when>
+						<when test="criteria.singleValue">
+							or ${criteria.action} #{criteria.value}
+						</when>
+						<when test="criteria.betweenValue">
+							or ${criteria.action} #{criteria.value} and
+							#{criteria.anotherValue}
+						</when>
+						<when test="criteria.arrValue">
+							or ${criteria.action}
+							<foreach collection="criteria.values" item="arrayItem" open="(" close=")" separator=",">
+								#{arrayItem}
+							</foreach>
+						</when>
+					</choose>
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	
+	
+	<sql id="tableName" > 
+		 tb_node 
+	</sql>
+	
+	<sql id="baseColumn" > 
+		id, is_online, is_lock, is_close, power, node_desc, space_id, parent_id
+	</sql>
+	
+	<!-- 根据主键查询 -->
+	<select id="selectByPrimaryKey" parameterType="String" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where id = #{id}
+	</select>
+	
+	<select id="selectByParnetId" parameterType="String" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where parent_id = #{parentId}
+	</select>
+	
+	<!-- 根据条件 -->
+	<select id="selectByFilter" parameterType="cn.antido.admin.pojo.filter.DaoFilter" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+			<include refid="whereClause" />
+		<if test="orderBy != null">
+			order by ${orderBy}
+		</if>
+	</select>
+	
+	<insert id="insertByNode" parameterType="cn.antido.admin.pojo.Node">
+		insert into 
+		<include refid="tableName"/>
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+	      	<if test="id != null" >id,</if>
+	       	<if test="is_online != null" >is_online,</if> 	
+     	 	<if test="is_lock != null" >is_lock,</if>
+     	 	<if test="is_close != null" >is_close,</if>
+     	 	<if test="power != null" >power,</if>
+     	 	<if test="created != null" >created,</if>
+     	 	<if test="updated != null" >updated,</if>
+     	 	<if test="node_desc != null" >node_desc,</if>
+     	 	<if test="parent_id != null" >parent_id,</if>
+     	 	<if test="space_id != null" >space_id,</if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >#{id},</if>
+	       	<if test="is_online != null" >#{is_online},</if> 	
+     	 	<if test="is_lock != null" >#{is_lock},</if>
+     	 	<if test="is_close != null" >#{is_close},</if>
+     	 	<if test="power != null" >#{power},</if>
+     	 	<if test="created != null" >#{created},</if>
+     	 	<if test="updated != null" >#{updated},</if>
+     	 	<if test="node_desc != null" >#{node_desc},</if>
+     	 	<if test="parent_id != null" >#{parent_id},</if>
+     	 	<if test="space_id != null" >#{space_id},</if>
+		</trim>
+	</insert>
+	
+	<!-- 更新一个节点 -->
+	<update id="updateByNode" parameterType="cn.antido.admin.pojo.Node">
+		update 
+		<include refid="tableName"/>
+		<set>
+			<if test="is_online != null">is_online = #{is_online},</if>
+			<if test="is_lock != null">is_lock = #{is_lock},</if>
+			<if test="is_close != null">is_close = #{is_close},</if>
+			<if test="power != null">power = #{power},</if>
+			<if test="updated != null">updated = #{updated},</if>
+			<if test="node_desc != null">node_desc = #{node_desc},</if>
+			<if test="parent_id != null">parent_id = #{parent_id},</if>
+			
+			<if test="space_id != null">space_id = #{space_id}, </if>
+			
+		</set>
+		where id = #{id}
+	</update>
+	
+	<update id="updateIsOnline" parameterType="cn.antido.admin.pojo.Node">
+		update 
+		<include refid="tableName"/>
+		set is_online = #{is_online}
+		where id = #{id}
+	</update>
+	
+	<update id="updateIsLock" parameterType="cn.antido.admin.pojo.Node">
+		update 
+		<include refid="tableName"/>
+		set is_lock = #{is_lock}
+		where id = #{id}
+	</update>
+	
+	<update id="updateIsClose" parameterType="cn.antido.admin.pojo.Node">
+		update 
+		<include refid="tableName"/>
+		set is_close = #{is_close}  
+		where id = #{id}
+	</update>
+	
+	<update id="removeSpaceId" parameterType="String">
+		update
+			<include refid="tableName"/>
+		set space_id = NULL , 
+		updated = now()
+		where id = #{id}
+	</update>
+	
+	<update id="removeSpaceIdByparentId" parameterType="String">
+		update
+			<include refid="tableName"/>
+		set space_id = NULL , 
+		updated = now()
+		where parent_id = #{parentId}
+	</update>
+	
+	<update id="outlineByParent" parameterType="String">
+		update
+			<include refid="tableName"/>
+		set is_online = FALSE , 
+		updated = now()
+		where parent_id = #{parentId}
+	</update>
+	
+	<select id="isClose" parameterType="String" resultType="boolean">
+		select 
+			is_close
+		from 
+			<include refid="tableName" />
+		where id = #{id}
+	</select>
+	
+</mapper>

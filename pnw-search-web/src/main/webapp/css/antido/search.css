@@ -1,0 +1,167 @@
+@CHARSET "UTF-8";
+.query-checked{
+	background-color: #34495e;
+	margin-right: 10px;
+	margin-left: 10px;
+	padding: 5px;
+	color: white; 
+	border-radius:3px;
+	cursor:pointer;
+}
+
+.query-free{
+	margin-right: 10px;
+	margin-left: 10px;
+	padding: 5px;
+	color: black; 
+	border-radius:3px;
+	cursor:pointer;
+}
+.query-free:hover{
+	background-color: #34495e;
+	margin-right: 10px;
+	margin-left: 10px;
+	padding: 5px;
+	color: white; 
+	border-radius:3px;
+	cursor:pointer;
+}
+.priceLimit{
+	margin-right: 5px;
+	margin-left: 5px;
+	width: 50px;
+	height: 25px;
+}
+.ui-helper-hidden-accessible{
+	display: none;
+}
+.parkInfo-name{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.parkInfo-desc{
+	font-size:12px;
+	margin-top: 10px;
+	margin-bottom: 0px;
+}
+.parkInfo-size{
+	font-size:18px;
+}
+.parkInfo-type{
+	margin-top: 8px;
+	font-size:12px;
+	float: right;
+}
+.parkList-queryOrder{
+	padding-left: 10px;
+	padding-right: 10px;
+	cursor:pointer;
+	margin-right:20px; 
+	display: inline-block;
+	
+}
+
+.parkList-queryOrder-checked{
+	padding-left: 10px;
+	padding-right: 10px;
+	cursor:pointer;
+	margin-right:20px; 
+	display: inline-block;
+	background-color: #4595e6;
+	color: white;
+}
+
+.parkList-queryOrder:HOVER{
+	background-color: #4595e6;
+	color: white;
+}
+.pager-next{
+	float:right;
+	/* margin-right:150px; */
+	display: inline-block;
+    padding: 0px 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+   
+}
+.pager-next a{
+	color: #337ab7;
+  		text-decoration: none;
+}
+
+.pager-previous{
+	float:right;
+	margin-right:10px; 
+	display: inline-block;
+    padding: 0px 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+   
+}
+
+.pager-previous a{
+	color: #337ab7;
+  		text-decoration: none;
+}
+
+.pager-total{
+	float:right;
+	margin-right:10px; 
+	display: inline-block;
+    padding: 0px 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+}
+
+.pager-disabled a{
+    color: #777;
+    cursor: not-allowed;
+    background-color: #fff;
+}
+
+.list-group-item-danger{
+	margin-bottom: 3px;
+}
+.list-group-item-danger:HOVER {
+	background-color: #efc6c5;
+}
+
+.list-group-item-warning{
+	margin-bottom: 3px;
+}
+.list-group-item-warning:HOVER {
+	background-color: #faf2cc;
+}
+
+.list-group-item-success{
+	margin-bottom: 3px;
+}
+.list-group-item-success:HOVER {
+	background-color: #d0e9c6;
+}
+
+
+.list-group-item-info{
+	margin-bottom: 3px;
+}
+
+.list-group-item-info:HOVER {
+	background-color: #c4e3f3;
+}
+
+
+@media (min-width: 768px) {
+ 	/* TMD属性选择器为啥就不好使,日了狗 */
+	#antido-search-form {
+		width: 350px;
+	}
+}
+
+.ui-autocomplete {
+	z-index: 2000;
+} 
+	

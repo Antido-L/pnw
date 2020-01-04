@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.admin.mapper.ParkMapper">
+	
+	<resultMap id="BaseResultMap" type="cn.antido.admin.pojo.Park">
+		<id column="id" property="id"/>  
+        <result column="name" property="name"/>  
+        <result column="position_desc" property="position_desc"/>  
+        <result column="park_type" property="park_type"/>
+		<result column="free_time" property="free_time"/>
+		<result column="state" property="state"/>
+		<result column="east_longitude" property="east_longitude"/>
+		<result column="north_latitude" property="north_latitude"/>
+		<result column="price" property="price"/>
+		<result column="created" property="created"/>		
+		<result column="updated" property="updated"/>
+		<result column="design_count" property="design_count"/>
+		<result column="working_count" property="working_count"/>
+		<result column="using_count" property="using_count"/>
+		<result column="district_id" property="district_id"/>
+		<result column="city_id" property="city_id"/>
+		<result column="province_id" property="province_id"/>
+		<result column="service_ip" property="service_ip"/>
+		<result column="direction" property="direction"/>
+		<result column="model_row" property="model_row"/>
+		<result column="model_col" property="model_col"/>
+		<!-- 对于关联的parkAdmin对象只封装id属性,在service层做其他可能要做的处理 -->
+		<association property="parkAdmin" javaType="cn.antido.admin.pojo.ParkAdmin">  
+           <id column="park_admin_id" property="id"/>
+           <result column="park_admin_name" property="name"/>
+        </association>
+        
+        <association property="street" javaType="cn.antido.admin.pojo.Street">  
+           <id column="street_id" property="id"/>
+        </association>
+        
+        <association property="node" javaType="cn.antido.admin.pojo.Node">  
+           <id column="node_id" property="id"/>
+        </association>
+	</resultMap>
+	
+	<resultMap id="MapResultMap" type="cn.antido.admin.pojo.Park">
+		<id column="id" property="id"/>
+        <result column="direction" property="direction"/>  
+        <result column="model_row" property="model_row"/>  
+        <result column="model_col" property="model_col"/>  
+	</resultMap>
+	
+	<!-- 过滤查询字段 -->
+	<sql id="whereClause">
+		<where>
+			<!-- 新增AND条件 -->
+			<if test="andCondition != null">
+				<foreach collection="andCondition" item="criteria">
+					<choose>
+						<when test="criteria.noValue">
+							and ${criteria.action}
+						</when>
+						<when test="criteria.singleValue">
+							and ${criteria.action} #{criteria.value}
+						</when>
+						<when test="criteria.betweenValue">
+							and ${criteria.action} #{criteria.value} and
+							#{criteria.anotherValue}
+						</when>
+						<when test="criteria.arrValue">
+							and ${criteria.action}
+							<foreach collection="criteria.values" item="arrayItem" open="(" close=")" separator=",">
+								#{arrayItem}
+							</foreach>
+						</when>
+					</choose>
+				</foreach>
+			</if>
+			<!-- 新增OR条件 -->
+			<if test="orCondition != null">
+				<foreach collection="orCondition" item="criteria">
+					<choose>
+						<when test="criteria.noValue">
+							or ${criteria.action}
+						</when>
+						<when test="criteria.singleValue">
+							or ${criteria.action} #{criteria.value}
+						</when>
+						<when test="criteria.betweenValue">
+							or ${criteria.action} #{criteria.value} and
+							#{criteria.anotherValue}
+						</when>
+						<when test="criteria.arrValue">
+							or ${criteria.action}
+							<foreach collection="criteria.values" item="arrayItem" open="(" close=")" separator=",">
+								#{arrayItem}
+							</foreach>
+						</when>
+					</choose>
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="tableName" > 
+		 tb_park 
+	</sql>
+	
+	<sql id="baseColumn" > 
+		id, name, position_desc, park_type, free_time, state, east_longitude, north_latitude, price, created, updated, park_admin_id, park_admin_name, design_count, working_count, using_count, street_id, district_id, city_id, province_id, node_id, service_ip, direction, model_row, model_col
+	</sql>
+	
+	<sql id="mapColumn">
+		direction, model_row, model_col
+	</sql>
+	
+	<!-- 根据主键查询 -->
+	<select id="selectByPrimaryKey" parameterType="Long" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where id = #{id}
+	</select>
+	
+	<!-- 根据条件 -->
+	<select id="selectByFilter" parameterType="cn.antido.admin.pojo.filter.DaoFilter" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+			<include refid="whereClause" />
+		<if test="orderBy != null">
+			order by ${orderBy}
+		</if>
+	</select>
+	
+	<!-- 获取所有对象 -->
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+	</select>
+	
+	<select id="selectMaxIdByStreetId" parameterType="Integer" resultType="Long">
+		select max(id) from
+			<include refid="tableName" />
+		where street_id = #{streetId}
+	</select>
+	
+	<update id="updateByPark" parameterType="cn.antido.admin.pojo.Park">
+		update 
+			<include refid="tableName" />
+		<set>
+			<if test="name != null" >name = #{name},</if> 	
+	   	 	<if test="position_desc != null" >position_desc = #{position_desc},</if>
+	   	 	<if test="park_type != null" >park_type = #{park_type},</if>
+	   	 	<if test="free_time != null" >free_time = #{free_time},</if>
+	   	 	<if test="state != null" >state = #{state},</if>
+	   	 	<if test="east_longitude != null" >east_longitude = #{east_longitude},</if>
+	   	 	<if test="north_latitude != null" >north_latitude = #{north_latitude},</if>
+	   	 	<if test="price != null" >price = #{price},</if>
+	   	 	<if test="updated != null" >updated = #{updated},</if>
+	   	 	<if test="design_count != null" >design_count = #{design_count},</if>
+	   	 	<if test="working_count != null" >working_count = #{working_count},</if>
+	   	 	<if test="using_count != null" >using_count = #{using_count},</if>
+	   	 	<if test="district_id != null" >district_id = #{district_id},</if>
+	   	 	<if test="city_id != null" >city_id = #{city_id},</if>
+	   	 	<if test="province_id != null" >province_id = #{province_id},</if>
+	   	 	<if test="service_ip != null" >service_ip = #{service_ip},</if>
+	   	 	<if test="direction != null" >direction = #{direction},</if>
+	   	 	<if test="model_row != null" >model_row = #{model_row},</if>
+	   	 	<if test="model_col != null" >model_col = #{model_col},</if>
+	   	 	
+	   	 	<if test="parkAdmin != null"> 
+	   	 		<if test="parkAdmin.id != null" >park_admin_id = #{parkAdmin.id},</if>
+	   	 		<if test="parkAdmin.name != null" >park_admin_name = #{parkAdmin.name},</if>
+	   	 	</if>
+	   	 	<if test="street != null"> 
+	   	 		<if test="street.id != null" >street_id = #{street.id},</if>
+	   	 	</if>
+	   	 	<if test="node != null"> 
+	   	 		<if test="node.id != null" >node_id = #{node.id},</if>
+	   	 	</if>
+	    </set>
+	    where id = #{id};
+	</update>
+
+	<insert id="insertPark" parameterType="cn.antido.admin.pojo.Park">
+		insert into <include refid="tableName" />
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+	      	<if test="id != null" >id,</if>
+	       	<if test="name != null" >name,</if> 	
+     	 	<if test="position_desc != null" >position_desc,</if>
+     	 	<if test="park_type!= null" >park_type,</if>
+     	 	<if test="free_time!= null" >free_time,</if>
+     	 	<if test="state!= null" >state,</if>
+     	 	<if test="east_longitude!= null" >east_longitude,</if>
+     	 	<if test="north_latitude!= null" >north_latitude,</if>
+     	 	<if test="price!= null" >price,</if>
+     	 	<if test="created!= null" >created,</if>
+     	 	<if test="updated!= null" >updated,</if>
+     	 	<if test="service_ip != null" >service_ip,</if>
+     	 	<if test="design_count!= null" >design_count,</if>
+     	 	<if test="working_count!= null" >working_count,</if>
+     	 	<if test="using_count!= null" >using_count,</if>
+			<if test="province_id != null">province_id,</if>
+			<if test="city_id != null">city_id,</if>
+			<if test="district_id != null">district_id,</if>
+			
+			<if test="direction != null" >direction,</if>
+	   	 	<if test="model_row != null" >model_row,</if>
+	   	 	<if test="model_col != null" >model_col,</if>
+			
+     	 	<if test="street != null" >
+				<if test="street.id != null">street_id,</if>
+			</if>
+			<if test="node != null" >
+				<if test="node.id != null">node_id,</if>
+			</if>
+     	 	<if test="parkAdmin != null" >
+				<if test="parkAdmin.id != null" >park_admin_id,</if>
+				<if test="parkAdmin.name!= null" >park_admin_name,</if>
+			</if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >#{id},</if>
+	       	<if test="name != null" >#{name},</if> 	
+     	 	<if test="position_desc != null" >#{position_desc},</if>
+     	 	<if test="park_type!= null" >#{park_type},</if>
+     	 	<if test="free_time!= null" >#{free_time},</if>
+     	 	<if test="state!= null" >#{state},</if>
+     	 	<if test="east_longitude!= null" >#{east_longitude},</if>
+     	 	<if test="north_latitude!= null" >#{north_latitude},</if>
+     	 	<if test="price!= null" >#{price},</if>
+     	 	<if test="created!= null" >#{created},</if>
+     	 	<if test="updated!= null" >#{updated},</if>
+     	 	<if test="service_ip != null" >#{service_ip},</if>
+     	 	<if test="design_count!= null" >#{design_count},</if>
+     	 	<if test="working_count!= null" >#{working_count},</if>
+     	 	<if test="using_count!= null" >#{using_count},</if>
+			<if test="province_id != null">#{province_id},</if>
+			<if test="city_id != null">#{city_id},</if>
+			<if test="district_id != null">#{district_id},</if>
+			
+			<if test="direction != null" >#{direction},</if>
+	   	 	<if test="model_row != null" >#{model_row},</if>
+	   	 	<if test="model_col != null" >#{model_col},</if>
+			
+     	 	<if test="street != null" >
+				<if test="street.id != null">#{street.id},</if>
+			</if>
+			<if test="node != null" >
+				<if test="node.id != null">#{node.id},</if>
+			</if>
+     	 	<if test="parkAdmin != null" >
+				<if test="parkAdmin.id != null" >#{parkAdmin.id},</if>
+				<if test="parkAdmin.name != null" >#{parkAdmin.name},</if>
+			</if>
+		</trim>
+	</insert>
+	
+	<select id="selectByStreetId" parameterType="Integer" resultMap="BaseResultMap">
+		select id,name from  
+			<include refid="tableName" />
+		 where street_id = #{id} 
+	</select>
+	
+	<!-- 街道id查所有 -->
+	<select id="selectAllByStreetId" parameterType="Integer" resultMap="BaseResultMap">
+		select 
+ 	  		<include refid="baseColumn" />
+ 	  	from
+ 	  		<include refid="tableName" />
+ 	  	where street_id = #{regionId}
+	</select>
+	
+	<!-- 区县id查所有 -->
+	<select id="selectAllByDistrictId" parameterType="Integer" resultMap="BaseResultMap">
+		select 
+ 	  		<include refid="baseColumn" />
+ 	  	from
+ 	  		<include refid="tableName" />
+ 	  	where district_id = #{regionId}
+	</select>
+	
+	<!-- 市id查所有 -->
+	<select id="selectAllByCityId" parameterType="Integer" resultMap="BaseResultMap">
+		select 
+ 	  		<include refid="baseColumn" />
+ 	  	from
+ 	  		<include refid="tableName" />
+ 	  	where city_id = #{regionId}
+	</select>
+	
+	<!-- 省id查所有 -->
+	<select id="selectAllByProvinceId" parameterType="Integer" resultMap="BaseResultMap">
+		select 
+ 	  		<include refid="baseColumn" />
+ 	  	from
+ 	  		<include refid="tableName" />
+ 	  	where province_id = #{regionId}
+	</select>
+	
+	<select id="selectAdminByStreetId" parameterType="Integer" resultType="Integer" >
+		select park_admin_id 
+		from 
+			<include refid="tableName" />
+		where street_id = #{streetId} GROUP BY park_admin_id		
+	</select>
+	
+	<select id="selectMapInfoById" parameterType="Long" resultMap="MapResultMap">
+		select 
+			<include refid="mapColumn" />
+		from
+			<include refid="tableName" />
+		where id = #{parkId}
+	</select>
+	
+	<delete id="deleteById" parameterType="Long">
+		delete from 
+			 <include refid="tableName" /> 
+		where id = #{id}
+	</delete>
+	
+	<update id="addUsingCount" parameterType="Long">
+		update 
+		<include refid="tableName" />
+		set using_count = using_count + 1 
+		where id = #{id}
+	</update>
+	
+	<update id="subUsingCount" parameterType="Long">
+		update 
+		<include refid="tableName" />
+		set using_count = using_count - 1 
+		where id = #{id}
+	</update>
+	
+	<update id="addWorkingCount" parameterType="Long">
+		update 
+		<include refid="tableName" />
+		set working_count = working_count + 1 
+		where id = #{id}
+	</update>
+	
+	<update id="subWorkingCount" parameterType="Long">
+		update 
+		<include refid="tableName" />
+		set working_count = working_count - 1 
+		where id = #{id}
+	</update>
+	
+</mapper>

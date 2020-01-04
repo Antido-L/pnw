@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.admin.mapper.UserMapper">
+	
+	<resultMap id="BaseResultMap" type="cn.antido.admin.pojo.User">
+		<id column="id" property="id"/>  
+        <result column="nick_name" property="nick_name"/>
+        <result column="name" property="name"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="client_type" property="client_type"/>
+        <result column="created" property="created"/>
+        <result column="updated" property="updated"/>
+        <result column="state" property="state"/>
+        <result column="opcode" property="opcode"/>
+        <result column="wallet" property="wallet"/>
+        
+        <result column="show_phone" property="show_phone"/>
+        <result column="show_license" property="show_license"/>
+        <result column="show_name" property="show_name"/>
+        
+        <result column="park_id" property="park_id"/>
+        <association property="car" javaType="cn.antido.admin.pojo.Car">
+        	<id column="car_id" property="id"/>
+        </association>
+        <association property="space" javaType="cn.antido.admin.pojo.Space">
+        	<id column="space_id" property="id"/>
+        </association>
+	</resultMap>
+	
+	<sql id="tableName" > 
+		 tb_user 
+	</sql>
+	
+	<sql id="baseColumn" > 
+		id, nick_name, name, phone, email, client_type, created, updated, car_id, space_id, park_id, state, opcode, wallet, show_phone, show_name, show_license   
+	</sql>
+	
+	<sql id="simpleColumn" > 
+		id, nick_name, phone, email, client_type, car_id, park_id, space_id, state, show_phone, show_name, show_license 
+	</sql>
+	
+	<!-- 根据主键查询 -->
+	<select id="selectByPrimaryKey" parameterType="String" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where id = #{id}
+	</select>
+	
+	<!-- 根据主键查询 -->
+	<select id="selectSimpleByPrimaryKey" parameterType="String" resultMap="BaseResultMap">
+		select 
+			<include refid="simpleColumn" />
+		from 
+			<include refid="tableName" />
+		where id = #{id}
+	</select>
+	
+	<insert id="insertByUser" parameterType="cn.antido.admin.pojo.User">
+		insert into 
+		<include refid="tableName"/>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null" >id,</if>
+	       	<if test="nick_name != null" >nick_name,</if> 	
+     	 	<if test="name != null" >name,</if>
+     	 	<if test="password != null" >password,</if>
+     	 	<if test="phone != null" >phone,</if>
+     	 	<if test="email != null" >email,</if>
+     	 	<if test="client_type != null" >client_type,</if>
+     	 	<if test="created != null" >created,</if>
+     	 	<if test="updated != null" >updated,</if>
+     	 	<if test="park_id != null" >park_id,</if>
+     	 	<if test="state != null" >state,</if>
+     	 	<if test="opCode != null" >opCode,</if>
+     	 	
+     	 	<if test="show_phone != null" >show_phone,</if>
+     	 	<if test="show_license != null" >show_license,</if>
+     	 	<if test="show_name != null" >show_name,</if>
+     	 	
+     	 	<if test="car != null">
+     	 		<if test="car.id != null">car_id,</if>
+     	 	</if>
+     	 	<if test="space != null">
+     	 		<if test="space.id != null">space_id,</if>
+     	 	</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null" >#{id},</if>
+     	 	<if test="nick_name != null" >#{nick_name},</if>
+     	 	<if test="name != null" >#{name},</if>
+     	 	<if test="password != null" >#{password},</if>
+     	 	<if test="phone != null" >#{phone},</if>
+     	 	<if test="email != null" >#{email},</if>
+     	 	<if test="client_type != null" >#{client_type},</if>
+     	 	<if test="created != null" >#{created},</if>
+     	 	<if test="updated != null" >#{updated},</if>
+     	 	<if test="park_id != null" >#{park_id},</if>
+     	 	<if test="state != null" >#{state},</if>
+     	 	<if test="opCode != null" >#{opCode},</if>
+     	 	
+     	 	<if test="show_phone != null" >#{show_phone},</if>
+     	 	<if test="show_license != null" >#{show_license},</if>
+     	 	<if test="show_name != null" >#{show_name},</if>
+     	 	
+     	 	<if test="car != null">
+     	 		<if test="car.id != null">#{car.id},</if>
+     	 	</if>
+     	 	<if test="space != null">
+     	 		<if test="space.id != null">#{space.id},</if>
+     	 	</if>
+		</trim>
+	</insert>
+	
+	<update id="updateByUser" parameterType="cn.antido.admin.pojo.User">
+		update 
+		<include refid="tableName" />
+		<set>
+	   	 	<if test="nick_name != null" >nick_name = #{nick_name},</if>
+	   	 	<if test="name != null" >name = #{name},</if>
+	   	 	<if test="password != null" >password = #{password},</if>
+	   	 	<if test="phone != null" >phone = #{phone},</if>
+	   	 	<if test="email != null" >email = #{email},</if>
+	   	 	<if test="client_type != null" >client_type = #{client_type},</if>
+	   	 	<if test="updated != null" >updated = #{updated},</if>
+	   	 	<if test="park_id != null" >park_id = #{park_id},</if>
+	   	 	<if test="state != null" >state = #{state},</if>
+	   	 	
+	   	 	<if test="show_phone != null" >show_phone = #{show_phone},</if>
+	   	 	<if test="show_license != null" >show_license = #{show_license},</if>
+	   	 	<if test="show_name != null" >show_name = #{show_name},</if>
+	   	 	
+	   	 	<if test="park_id == null" >park_id = NULL,</if>
+	   	 	<if test="space != null"> 
+	   	 		<if test="space.id != null" >space_id = #{space.id},</if>
+	   	 	</if>
+	   	 	<if test="space == null"> 
+	   	 		space_id = NULL,
+	   	 	</if>
+	   	 	<if test="car != null"> 
+	   	 		<if test="car.id != null" >car_id = #{car.id},</if>
+	   	 	</if>
+	    </set>
+	    where id = #{id};
+	</update>
+	
+	<select id="getOpCode" parameterType="String" resultType="String">
+		select opcode from 
+		<include refid="tableName" />
+		where id = #{id}
+			
+	</select>
+	
+	<update id="updateState" parameterType="cn.antido.admin.pojo.User" >
+		update 
+		<include refid="tableName" /> 
+		set state = #{state} 
+		where id = #{id}
+	</update>
+	
+	<update id="updateWallet" parameterType="cn.antido.admin.pojo.User" >
+		update 
+		<include refid="tableName" /> 
+		set wallet = #{wallet} 
+		where id = #{id}
+	</update>
+	
+	<select id="getWallet" parameterType="String" resultType="Integer">
+		select wallet from 
+		<include refid="tableName" /> 
+		where id = #{id}
+	</select>
+	
+	<select id="getAdminUser" parameterType="cn.antido.admin.pojo.User" resultMap="BaseResultMap">
+		select <include refid="simpleColumn" /> 
+		from <include refid="tableName" /> 
+		where name = #{name} and password = #{password} and client_type = #{client_type}
+	</select>
+</mapper>

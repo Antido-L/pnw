@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.admin.mapper.ParkAdminMapper">
+	
+	<resultMap id="BaseResultMap" type="cn.antido.admin.pojo.ParkAdmin">
+		<id column="id" property="id"/>  
+        <result column="code" property="code"/> 
+        <result column="name" property="name"/>
+        <result column="password" property="password"/>
+        <result column="birthday" property="birthday"/>
+        <result column="gender" property="gender"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="created" property="created"/>
+        <result column="updated" property="updated"/> 
+	</resultMap>
+	
+	
+	<sql id="baseColumn" > 
+		id, code, name, password, birthday, gender, phone, email, created, updated
+	</sql>
+	
+	<sql id="simpleColumn" > 
+		id, code, name, birthday, gender, phone, email
+	</sql>
+	
+	<sql id="tableName" > 
+		 tb_park_admin 
+	</sql>
+	
+	<!-- 过滤查询字段 -->
+	<sql id="whereClause">
+		<where>
+			<!-- 新增AND条件 -->
+			<if test="andCondition != null">
+				<foreach collection="andCondition" item="criteria">
+					<choose>
+						<when test="criteria.noValue">
+							and ${criteria.action}
+						</when>
+						<when test="criteria.singleValue">
+							and ${criteria.action} #{criteria.value}
+						</when>
+						<when test="criteria.betweenValue">
+							and ${criteria.action} #{criteria.value} and
+							#{criteria.anotherValue}
+						</when>
+						<when test="criteria.arrValue">
+							and ${criteria.action}
+							<foreach collection="criteria.values" item="arrayItem" open="(" close=")" separator=",">
+								#{arrayItem}
+							</foreach>
+						</when>
+						<when test="criteria.listValue">
+							and ${criteria.action}
+							<foreach collection="criteria.list" item="listItem" open="(" close=")" separator=",">
+								#{listItem}
+							</foreach>
+						</when>
+					</choose>
+				</foreach>
+			</if>
+			<!-- 新增OR条件 -->
+			<if test="orCondition != null">
+				<foreach collection="orCondition" item="criteria">
+					<choose>
+						<when test="criteria.noValue">
+							or ${criteria.action}
+						</when>
+						<when test="criteria.singleValue">
+							or ${criteria.action} #{criteria.value}
+						</when>
+						<when test="criteria.betweenValue">
+							or ${criteria.action} #{criteria.value} and
+							#{criteria.anotherValue}
+						</when>
+						<when test="criteria.arrValue">
+							or ${criteria.action}
+							<foreach collection="criteria.values" item="arrayItem" open="(" close=")" separator=",">
+								#{arrayItem}
+							</foreach>
+						</when>
+						<when test="criteria.listValue">
+							or ${criteria.action}
+							<foreach collection="criteria.list" item="listItem" open="(" close=")" separator=",">
+								#{listItem}
+							</foreach>
+						</when>
+					</choose>
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 根据主键查询 -->
+	<select id="selectByPrimaryKey" parameterType="Integer" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where id = #{id}
+	</select>
+	
+	<!-- 根据主键查询 简单对象-->
+	<select id="selectSimpleByPrimaryKey" parameterType="Integer" resultMap="BaseResultMap">
+		select 
+			<include refid="simpleColumn" />
+		from 
+			<include refid="tableName" />
+		where id = #{id}
+	</select>
+	
+	<!-- 获取所有对象 -->
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+	</select>
+	
+	<select id="selectSimpleByDaoFilter" parameterType="cn.antido.admin.pojo.filter.DaoFilter" resultMap="BaseResultMap">
+		select 
+			<include refid="simpleColumn" />
+		from
+			<include refid="tableName" />
+			<include refid="whereClause" />
+		<if test="orderBy != null">
+			order by ${orderBy}
+		</if>
+	</select>
+	
+	<select id="selectByDaoFilter" parameterType="cn.antido.admin.pojo.filter.DaoFilter" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from
+			<include refid="tableName" />
+			<include refid="whereClause" />
+		<if test="orderBy != null">
+			order by ${orderBy}
+		</if>
+	</select>
+
+	<insert id="insertParkAdmin" parameterType="cn.antido.admin.pojo.ParkAdmin">
+		insert into 
+			<include refid="tableName" />
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+	      	<if test="id != null" >id,</if>
+	       	<if test="code != null" >code,</if> 	
+     	 	<if test="name != null" >name,</if>
+     	 	<if test="password != null" >password,</if>
+     	 	<if test="birthday != null" >birthday,</if>
+     	 	<if test="gender != null" >gender,</if>
+     	 	<if test="phone != null" >phone,</if>
+     	 	<if test="email != null" >email,</if>
+     	 	<if test="created != null" >created,</if>
+     	 	<if test="updated != null" >updated,</if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >#{id},</if>
+	       	<if test="code != null" >#{code},</if> 	
+     	 	<if test="name != null" >#{name},</if>
+     	 	<if test="password != null" >#{password},</if>
+     	 	<if test="birthday != null" >#{birthday},</if>
+     	 	<if test="gender != null" >#{gender},</if>
+     	 	<if test="phone != null" >#{phone},</if>
+     	 	<if test="email != null" >#{email},</if>
+     	 	<if test="created!= null" >#{created},</if>
+     	 	<if test="updated!= null" >#{updated},</if>
+		</trim>
+	</insert>
+</mapper>

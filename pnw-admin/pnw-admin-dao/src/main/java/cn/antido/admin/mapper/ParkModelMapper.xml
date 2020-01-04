@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.admin.mapper.ParkModelMapper">
+	
+	<resultMap id="BaseResultMap" type="cn.antido.admin.pojo.ParkModel">
+       	<id column="id" property="id"/>
+        <result column="state" property="state"/>
+	</resultMap>
+	
+	<sql id="tableName" > 
+		 tb_park_model
+	</sql>
+	
+	<sql id="baseColumn" > 
+		id, state
+	</sql>
+	
+	<!-- 根据停车场查询所有 -->
+	<select id="selectAllModelByParkId" parameterType="Long" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where id like concat(#{parkId},'%')
+	</select>
+	
+	<!-- 更新一个位置 -->
+	<update id="updateParkModel" parameterType="cn.antido.admin.pojo.ParkModel">
+		update 
+		<include refid="tableName"/>
+		<set>
+			<if test="state != null">state = #{state}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<!-- 删除一个位置 -->
+	<delete id="deleteParkModelById" parameterType="String">
+		delete from
+			<include refid="tableName"/>
+		where id = #{id}
+	</delete>
+	
+	<!-- 删除一个停车场所有model -->
+	<delete id="deleteParkModelByParkId" parameterType="Long">
+		delete from
+			<include refid="tableName"/>
+		where id like concat(#{parkId},'%')
+	</delete>
+	
+	<insert id="insertParkModel" parameterType="cn.antido.admin.pojo.ParkModel">
+		insert into 
+		<include refid="tableName"/>
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			
+	      	<if test="id != null" >id,</if>
+	       	<if test="state != null" >state,</if>	
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >#{id},</if>
+     	 	<if test="state != null" >#{state},</if>
+		</trim>
+	</insert>
+	
+</mapper>

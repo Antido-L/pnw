@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.admin.mapper.SpaceMapper">
+	
+	<resultMap id="BaseResultMap" type="cn.antido.admin.pojo.Space">
+		<id column="id" property="id"/>  
+    	<result column="code" property="code"/>
+    	<result column="space_type" property="space_type"/>
+    	<result column="running_state" property="running_state"/>
+    	<result column="using_state" property="using_state"/>
+    	<result column="direction" property="direction"/>
+    	<result column="reserve_time" property="reserve_time"/>
+    	<result column="parked_time" property="parked_time"/>
+    	<result column="leaving_time" property="leaving_time"/>
+    	<result column="created" property="created"/>
+    	<result column="updated" property="updated"/>
+    	<result column="remark" property="remark"/>
+    	<result column="x_axis" property="x_axis"/>
+    	<result column="y_axis" property="y_axis"/>
+    	<result column="user_id" property="user_id"/>
+    	<result column="order_id" property="order_id"/>
+    	
+    	<association property="park" javaType="cn.antido.admin.pojo.Park">
+    		<id column="park_id" property="id"/>
+    	</association>
+    	<association property="node" javaType="cn.antido.admin.pojo.Node">
+    		<id column="node_id" property="id"/>
+    	</association>
+    	
+	</resultMap>
+	
+	<!-- 过滤查询字段 -->
+	<sql id="whereClause">
+		<where>
+			<!-- 新增AND条件 -->
+			<if test="andCondition != null">
+				<foreach collection="andCondition" item="criteria">
+					<choose>
+						<when test="criteria.noValue">
+							and ${criteria.action}
+						</when>
+						<when test="criteria.singleValue">
+							and ${criteria.action} #{criteria.value}
+						</when>
+						<when test="criteria.betweenValue">
+							and ${criteria.action} #{criteria.value} and
+							#{criteria.anotherValue}
+						</when>
+						<when test="criteria.arrValue">
+							and ${criteria.action}
+							<foreach collection="criteria.values" item="arrayItem" open="(" close=")" separator=",">
+								#{arrayItem}
+							</foreach>
+						</when>
+						<when test="criteria.listValue">
+							and ${criteria.action}
+							<foreach collection="criteria.list" item="listItem" open="(" close=")" separator=",">
+								#{listItem}
+							</foreach>
+						</when>
+					</choose>
+				</foreach>
+			</if>
+			<!-- 新增OR条件 -->
+			<if test="orCondition != null">
+				<foreach collection="orCondition" item="criteria">
+					<choose>
+						<when test="criteria.noValue">
+							or ${criteria.action}
+						</when>
+						<when test="criteria.singleValue">
+							or ${criteria.action} #{criteria.value}
+						</when>
+						<when test="criteria.betweenValue">
+							or ${criteria.action} #{criteria.value} and
+							#{criteria.anotherValue}
+						</when>
+						<when test="criteria.arrValue">
+							or ${criteria.action}
+							<foreach collection="criteria.values" item="arrayItem" open="(" close=")" separator=",">
+								#{arrayItem}
+							</foreach>
+						</when>
+						<when test="criteria.listValue">
+							or ${criteria.action}
+							<foreach collection="criteria.list" item="listItem" open="(" close=")" separator=",">
+								#{listItem}
+							</foreach>
+						</when>
+					</choose>
+				</foreach>
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="tableName" > 
+		 tb_space 
+	</sql>
+	
+	<!-- 基础字段 -->
+	<sql id="baseColumn" > 
+		id, code, space_type, running_state, using_state, direction, reserve_time, parked_time, leaving_time, created, updated, remark, park_id, user_id, order_id, node_id, x_axis, y_axis
+	</sql>
+	
+	<!-- 根据主键查询 -->
+	<select id="selectByPrimaryKey" parameterType="Long" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from tb_space
+		where id = #{id}
+	</select>
+	
+	<!-- 根据停车场id查 -->
+	<select id="selectByParkId" parameterType="Long" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where park_id = #{park_id}
+	</select>
+	
+	<!-- 根据过滤条件查 -->
+	<select id="selectByFilter" parameterType="cn.antido.admin.pojo.filter.DaoFilter" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+			
+			<include refid="whereClause" />
+		<if test="orderBy != null">
+			order by ${orderBy}
+		</if>
+	</select>
+	
+	<!-- 新建一个停车场 -->
+	<insert id="insertSpace" parameterType="cn.antido.admin.pojo.Space">
+		insert into 
+		<include refid="tableName" />
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+	      	<if test="id != null" >id,</if>
+	       	<if test="code != null" >code,</if> 	
+     	 	<if test="space_type != null" >space_type,</if>
+     	 	<if test="running_state != null" >running_state,</if>
+     	 	<if test="using_state != null" >using_state,</if>
+     	 	<if test="direction != null" >direction,</if>
+     	 	<if test="reserve_time != null" >reserve_time,</if>
+     	 	<if test="parked_time != null" >parked_time,</if>
+     	 	<if test="leaving_time != null" >leaving_time,</if>
+     	 	<if test="created != null" >created,</if>
+     	 	<if test="updated != null" >updated,</if>
+     	 	<if test="remark != null" >remark,</if>
+     	 	<if test="x_axis != null" >x_axis,</if>
+     	 	<if test="y_axis != null" >y_axis,</if>
+     	 	<if test="order_id != null">order_id,</if>
+     	 	<if test="park != null" >
+     	 		<if test="park.id != null" >park_id,</if>
+     	 	</if>
+     	 	<if test="node != null"> 
+	   	 		<if test="node.id != null" >node_id,</if>
+	   	 	</if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >#{id},</if>
+	       	<if test="code != null" >#{code},</if> 	
+     	 	<if test="space_type != null" >#{space_type},</if>
+     	 	<if test="running_state != null" >#{running_state},</if>
+     	 	<if test="using_state != null" >#{using_state},</if>
+     	 	<if test="direction != null" >#{direction},</if>
+     	 	<if test="reserve_time != null" >#{reserve_time},</if>
+     	 	<if test="parked_time != null" >#{parked_time},</if>
+     	 	<if test="leaving_time != null" >#{leaving_time},</if>
+     	 	<if test="created != null" >#{created},</if>
+     	 	<if test="updated != null" >#{updated},</if>
+     	 	<if test="remark != null" >#{remark},</if>
+     	 	<if test="x_axis != null" >#{x_axis},</if>
+     	 	<if test="y_axis != null" >#{y_axis},</if>
+     	 	<if test="order_id != null" >#{order_id},</if>
+     	 	<if test="park != null" >
+     	 		<if test="park.id != null" >#{park.id},</if>
+     	 	</if>
+     	 	<if test="node != null"> 
+	   	 		<if test="node.id != null" >#{node.id},</if>
+	   	 	</if>
+	   	 	
+		</trim>
+	</insert>
+	
+	<!-- 根据id更新一条数据 -->
+	<update id="updateBySpace" parameterType="cn.antido.admin.pojo.Space">
+		update 
+		<include refid="tableName" />
+		<set>
+	      	<if test="code != null" >code = #{code},</if> 	
+	   	 	<if test="space_type != null" >space_type =  #{space_type},</if>
+	   	 	<if test="running_state != null" >running_state = #{running_state},</if>
+	   	 	<if test="using_state != null" >using_state = #{using_state},</if>
+	   	 	<if test="direction != null" >direction = #{direction},</if>
+	   	 	<if test="reserve_time != null" >reserve_time = #{reserve_time},</if>
+	   	 	<if test="parked_time != null" >parked_time = #{parked_time},</if>
+	   	 	<if test="leaving_time != null" >leaving_time = #{leaving_time},</if>
+	   	 	<if test="created != null" >created = #{created},</if>
+	   	 	<if test="updated != null" >updated = #{updated},</if>
+	   	 	<if test="remark != null" >remark = #{remark},</if>
+	   	 	<if test="park != null" >
+	   	 		<if test="park.id != null" >park_id = #{park.id},</if>
+	   	 	</if>
+	   	 	<if test="user_id != null" >user_id = #{user_id},</if>
+	   	 	<if test="user_id == null" >user_id = NULL,</if>
+	   	 	<if test="order_id != null" >order_id = #{order_id},</if>
+	   	 	<if test="order_id == null" >order_id = NULL,</if>
+	   	 	<if test="node != null"> 
+	   	 		<if test="node.id != null" >node_id = #{node.id},</if>
+	   	 	</if>
+	    </set>
+	    where id = #{id};
+	</update>
+	
+	<select id="selectMaxId" parameterType="Long" resultType="Long">
+		select 
+			max(id)
+		from
+			<include refid="tableName" /> 
+		where park_id = #{parkId}
+	</select>
+	
+	<delete id="deleteSpaceById" parameterType="Long">
+		delete from
+			<include refid="tableName"/>
+		where id = #{spaceId}
+	</delete>
+	
+	<delete id="deleteSpaceByParkId" parameterType="Long">
+		delete from
+			<include refid="tableName"/>
+		where park_id = #{spaceId}
+	</delete>
+	
+	<update id="removeTimeItem" parameterType="Long">
+		update 
+		<include refid="tableName" />
+		set 
+   	 	reserve_time = NULL, 
+   	 	parked_time = NULL,
+   	 	leaving_time = NULL 
+	    where id = #{id};
+	</update>
+	
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.sso.mapper.SMSMapper">
+	
+	<resultMap id="BaseResultMap" type="cn.antido.admin.pojo.SMSItem">
+		<id column="id" property="id"/>  
+        <result column="phone" property="phone"/>
+        <result column="type" property="type"/>
+        <result column="time" property="time"/>
+        <result column="biz_id" property="biz_id"/>
+	</resultMap>
+	
+	<sql id="tableName" > 
+		 tb_sms  
+	</sql>
+	
+	<sql id="baseColumn" > 
+		id, phone, type, time, biz_id
+	</sql>
+	
+	<insert id="insertBySMSItem" parameterType="cn.antido.admin.pojo.SMSItem">
+		insert into 
+		<include refid="tableName"/>
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+	       	<if test="phone != null" >phone,</if> 
+	       	<if test="type != null" >type,</if>	
+     	 	<if test="time != null" >time,</if>
+     	 	<if test="biz_id != null" >biz_id,</if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+     	 	<if test="phone != null" >#{phone},</if>
+     	 	<if test="type != null" >#{type},</if>
+     	 	<if test="time != null" >#{time},</if>
+     	 	<if test="biz_id != null" >#{biz_id},</if>
+		</trim>
+	</insert>
+	
+</mapper>

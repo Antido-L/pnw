@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.admin.mapper.OrderMapper">
+	
+	<resultMap id="BaseResultMap" type="cn.antido.admin.pojo.Order">
+		<id column="id" property="id"/>  
+        <result column="free_time" property="free_time"/>
+        <result column="price" property="price"/>
+        <result column="pay_state" property="pay_state"/>
+        <result column="pay_type" property="pay_type"/>
+        <result column="created" property="created"/>
+        <result column="reserve_time" property="reserve_time"/>
+        <result column="using_time" property="using_time"/>
+        <result column="end_time" property="end_time"/>
+       
+        <association property="space" javaType="cn.antido.admin.pojo.Space">
+        	<id column="space_id" property="id"/>
+        </association>
+        <association property="user" javaType="cn.antido.admin.pojo.User">
+        	<id column="user_id" property="id"/>
+        </association>
+	</resultMap>
+	
+	<sql id="tableName" > 
+		 tb_order 
+	</sql>
+	
+	<sql id="baseColumn" > 
+		id, free_time, price, pay_state, pay_type, created, reserve_time, using_time, end_time, subtotal, user_id, space_id
+	</sql>
+	
+	<!-- 根据主键查询 -->
+	<select id="selectByPrimaryKey" parameterType="String" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where id = #{id}
+	</select>
+	
+	<!-- 根据用户查询 -->
+	<select id="selectByUser" parameterType="cn.antido.admin.pojo.User" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where user_id = #{user.id}
+	</select>
+	
+	<!-- 根据车位查询 -->
+	<select id="selectBySpace" parameterType="cn.antido.admin.pojo.Space" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where space_id = #{space_id}
+	</select>
+	
+	<!-- 插入一条新的订单 -->
+	<insert id="insertByOrder" parameterType="cn.antido.admin.pojo.Order">
+		insert into 
+		<include refid="tableName"/>
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+	      	<if test="id != null" >id,</if>
+	       	<if test="free_time != null" >free_time,</if> 	
+     	 	<if test="price != null" >price,</if>
+     	 	<if test="pay_state != null" >pay_state,</if>
+     	 	<if test="pay_type != null" >pay_type,</if>
+     	 	<if test="subtotal != null" >subtotal,</if>
+     	 	<if test="created != null" >created,</if>
+     	 	<if test="reserve_time != null" >reserve_time,</if>
+     	 	<if test="using_time != null" >using_time,</if>
+     	 	<if test="end_time != null" >end_time,</if>
+     	 	<if test="user != null" >
+     	 		<if	test="user.id != null" >user_id,</if>
+     	 	</if>
+     	 	<if test="space != null" >
+     	 		<if	test="space.id != null" >space_id,</if>
+     	 	</if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="id != null" >#{id},</if>
+	       	<if test="free_time != null" >#{free_time},</if> 	
+     	 	<if test="price != null" >#{price},</if>
+     	 	<if test="pay_state != null" >#{pay_state},</if>
+     	 	<if test="pay_type != null" >#{pay_type},</if>
+     	 	<if test="subtotal != null" >#{subtotal},</if>
+     	 	<if test="created != null" >#{created},</if>
+     	 	<if test="reserve_time != null" >#{reserve_time},</if>
+     	 	<if test="using_time != null" >#{using_time},</if>
+     	 	<if test="end_time != null" >#{end_time},</if>
+     	 	<if test="user != null" >
+     	 		<if	test="user.id != null" >#{user.id},</if>
+     	 	</if>
+     	 	<if test="space != null" >
+     	 		<if	test="space.id != null" >#{space.id},</if>
+     	 	</if>
+		</trim>
+	</insert>
+	
+	<update id="updateByOrder" parameterType="cn.antido.admin.pojo.Order">
+		update 
+		<include refid="tableName"/>
+		<set>
+			<if test="pay_state != null">pay_state = #{pay_state},</if>
+			<if test="pay_type != null">pay_type = #{pay_type},</if>
+			<if test="subtotal != null">subtotal = #{subtotal},</if>
+			<if test="reserve_time != null">reserve_time = #{reserve_time},</if>
+			<if test="using_time != null">using_time = #{using_time},</if>
+			<if test="end_time != null">end_time = #{end_time},</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.connection.mapper.NodeAddressMapper">
+	
+	<resultMap id="BaseResultMap" type="cn.antido.connection.pojo.NodeAddress">
+		<id column="node_id" property="node_id"/>  
+        <result column="address" property="address"/>
+        <result column="port" property="port"/>
+        <result column="state" property="state"/>
+	</resultMap>
+	
+	<sql id="tableName" > 
+		 tb_node_address 
+	</sql>
+	
+	<sql id="baseColumn" > 
+		node_id, address, port ,state
+	</sql>
+	
+	<select id="selectByNodeAddress" parameterType="cn.antido.connection.pojo.NodeAddress" resultMap="BaseResultMap">
+		select  
+			<include refid="baseColumn"/>
+		from 
+			<include refid="tableName"/>
+		where node_id = #{node_id}
+	</select>
+	
+	<select id="selectById" parameterType="String" resultMap="BaseResultMap">
+		select  
+			<include refid="baseColumn"/>
+		from
+			<include refid="tableName"/>
+		where node_id = #{id}
+	</select>
+	
+	<select id="selectByAddress" parameterType="String" resultMap="BaseResultMap">
+		select  
+			<include refid="baseColumn"/>
+		from
+			<include refid="tableName"/>
+		where address = #{address}
+	</select>
+	
+</mapper>

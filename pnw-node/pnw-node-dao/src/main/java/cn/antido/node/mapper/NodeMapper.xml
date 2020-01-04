@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.antido.node.mapper.NodeMapper">
+	
+	<resultMap id="BaseResultMap" type="cn.antido.node.pojo.Node">
+		<id column="name" property="name"/>  
+        <result column="global_id" property="global_id"/>
+        <result column="is_online" property="is_online"/>
+        <result column="is_lock" property="is_lock"/>
+        <result column="is_close" property="is_close"/>
+        <result column="power" property="power"/>
+        <result column="created" property="created"/>
+        <result column="updated" property="updated"/>
+        <result column="node_desc" property="node_desc"/>
+	</resultMap>
+	
+	
+	<sql id="tableName" > 
+		 tb_node 
+	</sql>
+	
+	<sql id="baseColumn" > 
+		name, global_id, is_online, is_lock, is_close, power, node_desc
+	</sql>
+	
+	<!-- 根据主键查询 -->
+	<select id="selectAll" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+	</select>
+	
+	<!-- <select id="selectByParnetId" parameterType="String" resultMap="BaseResultMap">
+		select 
+			<include refid="baseColumn" />
+		from 
+			<include refid="tableName" />
+		where parent_id = #{parentId}
+	</select> -->
+	
+	<insert id="insertByNode" parameterType="cn.antido.node.pojo.Node">
+		insert into 
+		<include refid="tableName"/>
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="name != null" >name,</if>
+	      	<if test="global_id != null" >global_id,</if>
+	       	<if test="is_online != null" >is_online,</if> 	
+     	 	<if test="is_lock != null" >is_lock,</if>
+     	 	<if test="is_close != null" >is_close,</if>
+     	 	<if test="power != null" >power,</if>
+     	 	<if test="created != null" >created,</if>
+     	 	<if test="updated != null" >updated,</if>
+     	 	<if test="node_desc != null" >node_desc,</if>
+    	</trim>
+    	<trim prefix="values (" suffix=")" suffixOverrides="," >
+    		<if test="name != null" >#{name},</if>
+	      	<if test="global_id != null" >#{global_id},</if>
+	       	<if test="is_online != null" >#{is_online},</if> 	
+     	 	<if test="is_lock != null" >#{is_lock},</if>
+     	 	<if test="is_close != null" >#{is_close},</if>
+     	 	<if test="power != null" >#{power},</if>
+     	 	<if test="created != null" >#{created},</if>
+     	 	<if test="updated != null" >#{updated},</if>
+     	 	<if test="node_desc != null" >#{node_desc},</if>
+		</trim>
+	</insert>
+	
+	<!-- 更新一个节点 
+	<update id="updateByNode" parameterType="cn.antido.admin.pojo.Node">
+		update 
+		<include refid="tableName"/>
+		<set>
+			<if test="is_online != null">is_online = #{is_online},</if>
+			<if test="is_lock != null">is_lock = #{is_lock},</if>
+			<if test="is_close != null">is_close = #{is_close},</if>
+			<if test="power != null">power = #{power},</if>
+			<if test="updated != null">updated = #{updated},</if>
+			<if test="node_desc != null">node_desc = #{node_desc},</if>
+			<if test="parent_id != null">parent_id = #{parent_id},</if>
+			
+			<if test="space_id != null">space_id = #{space_id}, </if>
+			
+		</set>
+		where id = #{id}
+	</update>
+	-->
+	<update id="onLineNode">
+		update 
+		<include refid="tableName"/>
+		set is_online = 1 , is_close = #{isClose}
+		where name = #{nodeName}
+	</update>
+	
+	<update id="outLineNode">
+		update 
+		<include refid="tableName"/>
+		set is_online = 0 
+		where name = #{nodeName}
+	</update>
+	
+	<update id="updateIsClose" parameterType="cn.antido.node.pojo.Node">
+		update 
+		<include refid="tableName"/>
+		set is_close = #{is_close}  
+		where name = #{name}
+	</update>
+	
+	<update id="outLineAll">
+		UPDATE 
+		<include refid="tableName"/> 
+		SET 
+		is_online = 0 ;
+	</update>
+	
+</mapper>
