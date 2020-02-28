@@ -30,8 +30,6 @@ public class SMSTools {
     private final String signName;
     private final String regisTemplateCode;
     private final String loginTemplateCode;
-    //private final String accessKeyId = "LTAIy0NPl3xdhW1c";
-    //private final String accessKeySecret = "HfgdjZsuM4XRPwaB03nrOKiyaoK2Hh";
     
     /**
      * 用于存放已经发送的短信回执单号
